@@ -4,6 +4,7 @@ def log_agroup(archive):
     players = []
     kills = {}
     weapons = {}
+    world = 0
 
     archive = open(file=archive, mode="r", encoding="utf8")
     for line in archive:
@@ -24,8 +25,11 @@ def log_agroup(archive):
                         list.append(line.split()[6])
                         list.append(line.split()[7])
                         string = ' '.join(list)
+                        if string in players:
+                            kills[string] += 1
                         if string not in players:
                             players.append(string)
+                            kills[string] = 1
             if line.split()[5] not in players:
                 if line.split()[6] != "killed":
                     pass
@@ -34,18 +38,29 @@ def log_agroup(archive):
                         list.append(line.split()[5])
                         list.append(line.split()[6])
                         string = ' '.join(list)
+                        if string in players:
+                            kills[string] += 1
                         if string not in players:
                             players.append(string)
+                            kills[string] = 1
+            if line.split()[6] == "killed":
+                string = line.split()[5]
+                if string in players:
+                    if string != "<world>":
+                        kills[string] += 1
             if line.split()[5] not in players:
                 if line.split()[6] == "killed":
                     string = line.split()[5]
-                    if string not in players:
-                        if string != "<world>":
-                            players.append(string)
+                    if string != "<world>":
+                        players.append(string)
+                        kills[string] = 1
+                if string == "<world>":
+                    world += 1
+                    print(line)
         if "0:00 InitGame" in line:
             game += 1
     archive.close()
-    return ("total_kills = " + str(total_kills), game, players, weapons, kills)
+    return ("total_kills = " + str(total_kills), game, players, weapons, kills, world)
 
 
 print(log_agroup("qgames.log"))
