@@ -70,7 +70,6 @@ def log_agroup(archive):
             "weapon_kill": weapons
         }
     json_print = json.dumps(json_return)
-    """return ("total_kills = " + str(total_kills), "games = " + str(game), players, weapons, kills)"""
     return json_print
 
 
