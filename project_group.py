@@ -1,3 +1,5 @@
+import json
+
 def log_agroup(archive):
     game = 0
     total_kills = 0
@@ -56,11 +58,20 @@ def log_agroup(archive):
                         kills[string] = 1
                 if string == "<world>":
                     world += 1
-                    print(line)
         if "0:00 InitGame" in line:
             game += 1
+            if game == 1:
+                pass
     archive.close()
-    return ("total_kills = " + str(total_kills), game, players, weapons, kills, world)
+    json_return = {
+            "total_kills": total_kills,
+            "players": players,
+            "kills": kills,
+            "weapon_kill": weapons
+        }
+    json_print = json.dumps(json_return)
+    """return ("total_kills = " + str(total_kills), "games = " + str(game), players, weapons, kills)"""
+    return json_print
 
 
 print(log_agroup("qgames.log"))
